@@ -13,7 +13,49 @@
 CHIP RAM64 {
     IN in[16], load, address[6];
     OUT out[16];
-
+    /*
+    ...000 -> reg0
+    ...001 -> reg1
+    ...010 -> reg2
+    ...011 -> reg3
+    ...100 -> reg4
+    ...101 -> reg5
+    ...110 -> reg6
+    ...111 -> reg7
+    
+    000... -> ram1
+    001... -> ram2
+    010... -> ram3
+    011... -> ram4
+    100... -> ram5
+    101... -> ram6
+    110... -> ram7
+    111... -> ram8
+    */
     PARTS:
     // Put your code here:
+
+    DMux8Way (in=load, sel=address[0..2], a=ram1, b=ram2, c=ram3, d=ram4, e=ram5, f=ram6, g=ram7, h=ram8);
+
+    RAM8 (in=in, load=ram1, address=address[3..5], out=ram1out);
+    RAM8 (in=in, load=ram2, address=address[3..5], out=ram2out);
+    RAM8 (in=in, load=ram3, address=address[3..5], out=ram3out);
+    RAM8 (in=in, load=ram4, address=address[3..5], out=ram4out);
+    RAM8 (in=in, load=ram5, address=address[3..5], out=ram5out);
+    RAM8 (in=in, load=ram6, address=address[3..5], out=ram6out);
+    RAM8 (in=in, load=ram7, address=address[3..5], out=ram7out);
+    RAM8 (in=in, load=ram8, address=address[3..5], out=ram8out);
+
+    Mux8Way16 (
+      a=ram1out, 
+      b=ram2out, 
+      c=ram3out, 
+      d=ram4out,
+      e=ram5out, 
+      f=ram6out, 
+      g=ram7out, 
+      h=ram8out,
+      sel=address[0..2], 
+      out=out
+    );
 }
